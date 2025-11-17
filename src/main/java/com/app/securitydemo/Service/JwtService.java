@@ -17,16 +17,6 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-//    private String generateSecretKey() {
-//        try {
-//            KeyGenerator keygen = KeyGenerator.getInstance("HmacSHA256");
-//            SecretKey key = keygen.generateKey();
-//            return Base64.getEncoder().encodeToString(key.getEncoded());
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error generating secret key: " + e);
-//        }
-//    }
-
     public String generateToken(String userEmail) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userEmail", userEmail);
