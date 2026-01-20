@@ -19,7 +19,6 @@ import java.util.Optional;
 @Transactional
 public class UserService implements UserDetailsService {
 
-
     private final UserRepo userRepo;
 
     private final PasswordEncoder passwordEncoder;
@@ -71,6 +70,7 @@ public class UserService implements UserDetailsService {
 
     public UserResponse getUserResponse(User user) {
         return new UserResponse(
+                user.getUserId(),
                 user.getName(),
                 user.getEmail(),
                 user.getProfileImageUrl(),

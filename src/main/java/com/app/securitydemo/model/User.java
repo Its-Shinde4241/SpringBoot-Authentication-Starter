@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -16,6 +18,10 @@ public class User {
     @Id
     @GeneratedValue
     private UUID id;
+
+    //    surrogate key for business logic
+    @Column(nullable = false, unique = true, updatable = false)
+    private String userId;
 
     @Column(nullable = false)
     private String name;
@@ -39,5 +45,26 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void generateUserId() {
+
+        if (this.userId == null) {
+            UUID uuid = UUID.randomUUID();
+            ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+            bb.putLong(uuid.getMostSignificantBits());
+            bb.putLong(uuid.getLeastSignificantBits());
+
+            this.userId = Base64.getUrlEncoder().withoutPadding().encodeToString(bb.array());
+        }
+
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 //    private String role;
 }
